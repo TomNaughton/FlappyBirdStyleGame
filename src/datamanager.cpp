@@ -1,15 +1,18 @@
 #include "datamanager.hpp"
 
-DataManager::DataManager() {
-    saveLoad = new SaveLoad("savefile.json");
+SaveLoad DataManager::saveLoad;
+SaveData DataManager::data;
 
-    data = saveLoad->Load();
+void DataManager::Init() {
+    saveLoad = SaveLoad("savefile.json");
+
+    data = saveLoad.Load();
 }
 
 void DataManager::Save() {
-    saveLoad->Save(data);
+    saveLoad.Save(data);
 }
 
 void DataManager::Load() {
-    data = saveLoad->Load();
+    data = saveLoad.Load();
 }

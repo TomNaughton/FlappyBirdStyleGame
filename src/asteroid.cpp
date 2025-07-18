@@ -5,8 +5,7 @@ Asteroid::Asteroid(float x, float y, float width, float height, float speed, sf:
     
     sprite = s;
         
-    // Scale the sprite to match the given width and height
-    sprite.setScale(width, height);
+    sprite.setScale(width / sprite.getTextureRect().width, height / sprite.getTextureRect().height);
 
     sprite.setPosition(x, y);
 }

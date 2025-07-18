@@ -7,6 +7,7 @@ using json = nlohmann::json;
 
 class SaveLoad {
     public:
+        SaveLoad() = default;
         SaveLoad(std::string path);
         ~SaveLoad() = default;
 

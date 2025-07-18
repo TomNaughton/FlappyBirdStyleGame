@@ -4,13 +4,17 @@
 #include "saveload.hpp"
 
 class DataManager {
-    public:
-        SaveData data;
-        SaveLoad *saveLoad;
+    public:        
+        static void Init();
 
-        DataManager();
-        ~DataManager() = default;
+        static void Save();
+        static void Load();
 
-        void Save();
-        void Load();
+        static SaveData& GetData() {
+            return data;
+        }
+
+    private:
+        static SaveLoad saveLoad;
+        static SaveData data;
 };
