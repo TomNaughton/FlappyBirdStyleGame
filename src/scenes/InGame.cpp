@@ -25,11 +25,11 @@ InGame::InGame() {
 }
 
 void InGame::handleEvent(const sf::Event& event) {
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && player.canJump) {
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && player.hasJumpReset) {
         player.flap();
     }
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
-        player.canJump = true;
+        player.hasJumpReset = true;
     }
 }
 
@@ -117,7 +117,7 @@ bool InGame::isFinished() const {
 }
 
 std::string InGame::nextScene() const {
-    return "MainMenu";  // or a GameOver scene if you add one
+    return "MainMenu";
 }
 
 void InGame::createStars(int count, sf::Vector2u windowSize) {

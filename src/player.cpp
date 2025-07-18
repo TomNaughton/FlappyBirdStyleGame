@@ -25,7 +25,7 @@ bool Player::update(float dt, float windowHeight) {
 
 void Player::flap() {
     velocity = flapStrength;
-    canJump = false;
+    hasJumpReset = false;
 }
 
 void Player::draw(sf::RenderWindow& window) {

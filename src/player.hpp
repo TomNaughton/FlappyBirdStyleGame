@@ -13,7 +13,7 @@ public:
     void reset();
     void setSprite(sf::Sprite s);
 
-    bool canJump = true;
+    bool hasJumpReset = true;
 
     float getY() const;
     sf::FloatRect getBounds() const;
