@@ -11,6 +11,7 @@ InGame::InGame() {
 
     spaceshipSprite.setTexture(spriteSheet);
     spaceshipSprite.setTextureRect(sf::IntRect(0, 0, 512, 270));
+    spaceshipSprite.setPosition(50, window->getSize().y/2);
     player.setSprite(spaceshipSprite);
 
     asteroidSprite.setTexture(spriteSheet);
@@ -19,6 +20,8 @@ InGame::InGame() {
     if (!font.loadFromFile("assets/arial.ttf")) {
         // Handle loading error
     }
+
+    createStars(100, window->getSize());
 }
 
 void InGame::handleEvent(const sf::Event& event) {
@@ -31,6 +34,7 @@ void InGame::handleEvent(const sf::Event& event) {
 }
 
 void InGame::update(float dt) {
+    this->dt = dt;
     if (gameOver) return;
 
     if (player.update(dt, window->getSize().y)) {
@@ -85,6 +89,14 @@ void InGame::update(float dt) {
 }
 
 void InGame::render(sf::RenderWindow& window) {
+    for (auto& star : stars) {
+        star.shape.move(-star.speed * dt, 0);
+        if (star.shape.getPosition().x < 0)
+            star.shape.setPosition(window.getSize().x, star.shape.getPosition().y);
+
+        window.draw(star.shape);
+    }
+
     player.draw(window);
     for (auto& obs : obstacles)
         obs->draw(window);
@@ -106,4 +118,16 @@ bool InGame::isFinished() const {
 
 std::string InGame::nextScene() const {
     return "MainMenu";  // or a GameOver scene if you add one
+}
+
+void InGame::createStars(int count, sf::Vector2u windowSize) {
+    stars.clear();
+    for (int i = 0; i < count; ++i) {
+        Star star;
+        star.shape = sf::CircleShape(1.f);
+        star.shape.setFillColor(sf::Color::White);
+        star.shape.setPosition(rand() % windowSize.x, rand() % windowSize.y);
+        star.speed = 20.f + static_cast<float>(rand() % 40);
+        stars.push_back(star);
+    }
 }

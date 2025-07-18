@@ -6,6 +6,7 @@
 
 #include "../player.hpp"
 #include "../asteroid.hpp"
+#include "../star.hpp"
 
 class InGame : public Scene {
 public:
@@ -30,13 +31,18 @@ private:
     sf::Texture spriteSheet;
     sf::Font font;
 
+    std::vector<Star> stars;
+
     float obstacleSpawnTimer = 0.f;
     float spawnInterval = 2.0f;
 
     int score = 0;
     float lastScoreX = 0.f;
+    float dt;
 
     sf::Text scoreText;
 
     bool gameOver = false;
+
+    void createStars(int count, sf::Vector2u windowSize);
 };
