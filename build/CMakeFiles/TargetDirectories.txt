@@ -1,0 +1,3 @@
+/home/tom/Documents/Projects/FlappyBirdStyleGame/build/CMakeFiles/FlappyBirdStyleGame.dir
+/home/tom/Documents/Projects/FlappyBirdStyleGame/build/CMakeFiles/edit_cache.dir
+/home/tom/Documents/Projects/FlappyBirdStyleGame/build/CMakeFiles/rebuild_cache.dir
