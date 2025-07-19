@@ -1,39 +1,31 @@
-// #pragma once
-// #include <SFML/Graphics.hpp>
-// #include <vector>
+#pragma once
 
-// class Asteroid {
-// public:
-//     Asteroid(const std::vector<sf::Vector2f>& points, const sf::Vector2f& position);
+#include <SFML/Graphics.hpp>
+#include <vector>
 
-//     void update(float dt);
-//     void draw(sf::RenderWindow& window) const;
+class Asteroid {
+public:
+    Asteroid(const std::vector<sf::Vector2f>& polygon,
+             sf::Vector2f position,
+             sf::Vector2f velocity,
+             float rotationSpeed);
 
-//     // Checks if a point hits the asteroid polygon (simple point-in-polygon test)
-//     bool containsPoint(const sf::Vector2f& point) const;
+    void update(float dt);
+    void draw(sf::RenderWindow& window) const;
 
-//     // Split asteroid polygon along a line (defined by two points)
-//     // Returns a vector of new Asteroids created by splitting this one
-//     std::vector<Asteroid> split(const sf::Vector2f& lineP1, const sf::Vector2f& lineP2) const;
+    std::vector<Asteroid> splitAt(const sf::Vector2f& impactPoint, const sf::Vector2f& projectileVelocity);
 
-//     sf::Vector2f getPosition() const { return position; }
-//     void setVelocity(const sf::Vector2f& vel) { velocity = vel; }
+    sf::Vector2f getPosition() const;
+    sf::Vector2f getVelocity() const;
 
-// private:
-//     sf::ConvexShape shape;
-//     std::vector<sf::Vector2f> points; // polygon vertices local to position
-//     sf::Vector2f position;
-//     sf::Vector2f velocity;
-//     float rotation = 0.f;
-//     float angularVelocity = 0.f;
+    bool containsPoint(const sf::Vector2f& point) const;
 
-//     // Helper: point-in-polygon test
-//     bool pointInPolygon(const sf::Vector2f& point) const;
+    bool collidable = true;
 
-//     // Helper: split polygon implementation (math heavy)
-//     std::pair<std::vector<sf::Vector2f>, std::vector<sf::Vector2f>> splitPolygon(
-//         const std::vector<sf::Vector2f>& polygon,
-//         const sf::Vector2f& p1,
-//         const sf::Vector2f& p2
-//     ) const;
-// };
+private:
+    std::vector<sf::Vector2f> polygon; // Local points relative to center
+    sf::Vector2f position;
+    sf::Vector2f velocity;
+    float rotationSpeed;
+    float rotation;
+};

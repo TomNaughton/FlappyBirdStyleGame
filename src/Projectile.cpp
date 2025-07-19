@@ -24,3 +24,7 @@ bool Projectile::isOffScreen(const sf::Vector2f& playerPos, float maxDistance) c
     float distanceSquared = dx * dx + dy * dy;
     return distanceSquared > maxDistance * maxDistance;
 }
+
+sf::Vector2f Projectile::getPosition() const {
+    return shape.getPosition();
+}

@@ -31,6 +31,21 @@ InGame::InGame() {
     noise.SetFractalOctaves(3);      // adds detail
     noise.SetFractalGain(0.5f);
     noise.SetFractalLacunarity(2.0f);
+
+    std::vector<sf::Vector2f> bigAsteroidShape = {
+        { -40.f, -30.f },
+        {  30.f, -25.f },
+        {  45.f,  20.f },
+        { -25.f,  40.f }
+    };
+
+    spaceObjects.spawnAsteroid(
+        bigAsteroidShape,
+        sf::Vector2f(500.f, 300.f),   // position
+        sf::Vector2f(-50.f, 20.f),    // velocity
+        30.f                          // rotation speed deg/s
+    );
+
 }
 
 void InGame::handleEvent(const sf::Event& event) {
@@ -41,38 +56,29 @@ void InGame::handleEvent(const sf::Event& event) {
             targetZoom = std::max(targetZoom * 0.9f, minZoom); // zoom in
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-        targetZoom = std::max(targetZoom * 0.98f, minZoom);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
-        targetZoom = std::min(targetZoom * 1.02f, maxZoom);
+    zoomOut = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
+    zoomIn = sf::Keyboard::isKeyPressed(sf::Keyboard::X);
         
     //startShake(10.f, 0.4f); // shake with 10px intensity for 0.4 seconds
 
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-        sf::Vector2f playerPos = player.getPosition();
-
-        float angleDegrees = player.getRotation();
-        float angleRadians = angleDegrees * 3.14159265f / 180.f;
-        sf::Vector2f direction(std::cos(angleRadians), std::sin(angleRadians));
-
-        float projectileSpeed = 600.f;
-        float spawnOffset = 40.f; // spawn ahead of player
-        sf::Vector2f spawnPos = playerPos + direction * spawnOffset;
-
-        sf::Vector2f velocity = direction * projectileSpeed;
-        projectiles.emplace_back(spawnPos, velocity);
+        spaceObjects.spawnProjectile(player.getPosition(), player.getRotation(), 1000.0f);
     }
 }
 
 void InGame::update(float dt) {
     this->dt = dt;
 
+    if (!zoomOut && zoomIn)
+        targetZoom = std::max(targetZoom * 0.98f, minZoom);
+    else if (zoomOut && !zoomIn)
+        targetZoom = std::min(targetZoom * 1.02f, maxZoom);
+
     // simple linear interpolation
     float zoomSpeed = 5.0f; // higher = faster zoom
     currentZoom += (targetZoom - currentZoom) * dt * zoomSpeed;
 
     player.update(dt);
-    updateProjectiles(dt);
 
     sf::Vector2f target = player.getPosition();
     sf::Vector2f current = view->getCenter();
@@ -103,6 +109,8 @@ void InGame::update(float dt) {
     } else {
         shakeOffset = {0.f, 0.f};
     }
+
+    spaceObjects.update(dt, player.getPosition(), 2000.0f);
 }
 
 void InGame::render(sf::RenderWindow& window) {
@@ -113,10 +121,8 @@ void InGame::render(sf::RenderWindow& window) {
 
     backgroundElementManager.drawBackground(window, view->getCenter(), dt);
     backgroundElementManager.drawStars(window, view->getCenter(), dt);
-    //backgroundElementManager.drawDebugChunks(window, window.getView());
-
-    drawProjectiles(window);
     player.draw(window);
+    spaceObjects.draw(window);
 }
 
 std::string InGame::nextScene() const {
@@ -126,23 +132,4 @@ std::string InGame::nextScene() const {
 void InGame::startShake(float intensity, float duration) {
     shakeIntensity = intensity;
     shakeTime = duration;
-}
-
-void InGame::updateProjectiles(float dt) {
-    for (auto& p : projectiles) {
-        p.update(dt);
-    }
-    // Remove dead projectiles
-    projectiles.erase(
-    std::remove_if(projectiles.begin(), projectiles.end(),
-        [&](const Projectile& p) {
-            return p.isOffScreen(player.getPosition(), maxZoom*1000);
-        }),
-    projectiles.end());
-}
-
-void InGame::drawProjectiles(sf::RenderWindow& window) const {
-    for (const auto& p : projectiles) {
-        p.draw(window);
-    }
 }
