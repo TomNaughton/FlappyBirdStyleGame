@@ -1,7 +1,7 @@
 #pragma once
 
-#include "savedata.hpp"
-#include "saveload.hpp"
+#include "SaveData.hpp"
+#include "SaveLoad.hpp"
 
 class DataManager {
     public:        

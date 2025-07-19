@@ -5,7 +5,7 @@ MainMenu::MainMenu() {
     font.loadFromFile("assets/arial.ttf");
 
     titleText.setFont(font);
-    titleText.setString("Flappy Ship");
+    titleText.setString("Gravitas");
     titleText.setCharacterSize(48);
     titleText.setPosition(100, 100);
 
@@ -18,11 +18,6 @@ MainMenu::MainMenu() {
 void MainMenu::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
         startGame = true;
-        // player.reset();
-        // obstacles.clear();
-        // score = 0;
-        // lastScoreX = 0.f;
-        // player.flap();
     }                
 }
 

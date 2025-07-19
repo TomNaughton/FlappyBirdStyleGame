@@ -1,4 +1,4 @@
-#include "datamanager.hpp"
+#include "DataManager.hpp"
 
 SaveLoad DataManager::saveLoad;
 SaveData DataManager::data;

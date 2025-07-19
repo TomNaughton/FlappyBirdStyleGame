@@ -1,4 +1,4 @@
-#include "asteroid.hpp"
+#include "Asteroid.hpp"
 
 Asteroid::Asteroid(float x, float y, float width, float height, float speed, sf::Sprite s)
     : speed(speed) {
@@ -18,18 +18,10 @@ void Asteroid::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-bool Asteroid::isOffScreen() const {
-    return sprite.getPosition().x + sprite.getGlobalBounds().width < 0;
-}
-
 bool Asteroid::checkCollision(const sf::FloatRect& other) const {
     return sprite.getGlobalBounds().intersects(other);
 }
 
 sf::Vector2f Asteroid::getPosition() const {
     return sprite.getPosition();
-}
-
-float Asteroid::getWidth() const {
-    return sprite.getGlobalBounds().width;
 }

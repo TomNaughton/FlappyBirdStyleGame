@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run FlappyBirdStyleGame",
+      "name": "Run SpaceExplorationGame",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/FlappyBirdStyleGame",
+      "program": "${workspaceFolder}/build/SpaceExplorationGame",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

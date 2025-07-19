@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include "json.hpp"
-#include "savedata.hpp"
+#include "SaveData.hpp"
 using json = nlohmann::json;
 
 class SaveLoad {

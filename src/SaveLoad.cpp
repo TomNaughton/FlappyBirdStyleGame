@@ -1,4 +1,4 @@
-#include "saveload.hpp"
+#include "SaveLoad.hpp"
 
 SaveLoad::SaveLoad(std::string path) {
     filePath = path;
