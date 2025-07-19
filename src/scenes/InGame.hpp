@@ -3,10 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <limits>
 
 #include "../Player.hpp"
 #include "../Asteroid.hpp"
-#include "../Star.cpp"
+#include "../DataManager.hpp"
+#include "../BackgroundElementManager.hpp"
+
+#include "../FastNoiseLite.h"
 
 class InGame : public Scene {
 public:
@@ -20,12 +24,13 @@ public:
     static sf::RenderWindow* window;
     static sf::View* view;
 
-    void generateStarsAround(const sf::Vector2f& cameraCenter);
-    std::vector<Star> generateStarsForChunk(int chunkX, int chunkY);
-    void drawStars(sf::RenderWindow& window, const sf::Vector2f& cameraPos);
-    void updateVisibleChunks(const sf::Vector2f& cameraCenter);
+    // void generateStarsAround(const sf::Vector2f& cameraCenter);
+    // void cullFarChunks(const sf::Vector2f& cameraCenter);
+    // sf::Color getStarColor(float parallaxFactor);
+    void startShake(float intensity, float duration);
 
 private:
+    BackgroundElementManager backgroundElementManager;
     Player player;
     sf::Texture playerTexture;
     sf::Texture obstacleTexture;
@@ -34,12 +39,19 @@ private:
     sf::Texture spriteSheet;
     sf::Font font;
     sf::Vector2f previousViewCenter;
+    FastNoiseLite noise;
+
+    float currentZoom = 1.0f;
+    float targetZoom = 1.0f;
+
+    const float minZoom = 0.25f;
+    const float maxZoom = 3.0f;
     
-    std::vector<Star> stars;
-    std::map<std::pair<int, int>, std::vector<Star>> starChunks;
-    const float STAR_DENSITY = 0.0005f;
-    const float STAR_AREA_RADIUS = 2000.f;
-    const int CHUNK_SIZE = 512;
+    
+
+    sf::Vector2f shakeOffset = {0.f, 0.f};
+    float shakeTime = 0.f;
+    float shakeIntensity = 0.f;
 
     float dt;
 };

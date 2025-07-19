@@ -2,7 +2,7 @@
 #include "SceneManager.hpp"
 
 MainMenu::MainMenu() {
-    font.loadFromFile("assets/arial.ttf");
+    font.loadFromFile("../assets/arial.ttf");
 
     titleText.setFont(font);
     titleText.setString("Gravitas");

@@ -1,7 +1,7 @@
 #include "Settings.hpp"
 
 Settings::Settings() {
-    font.loadFromFile("assets/font.ttf");
+    font.loadFromFile("../assets/arial.ttf");
 
     titleText.setFont(font);
     titleText.setString("Settings");
