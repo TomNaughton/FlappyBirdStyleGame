@@ -49,7 +49,7 @@ private:
     std::map<ChunkCoord, std::vector<BackgroundElement>> backgroundChunks;
     const float CHUNK_RADIUS = 2000.f;
     const int CHUNK_SIZE = 512;
-    const int VISIBLE_CHUNK_RADIUS = 7;
+    const int VISIBLE_CHUNK_RADIUS = 12;
     const int BUFFER_CHUNK_RADIUS = VISIBLE_CHUNK_RADIUS + 2;
 
 

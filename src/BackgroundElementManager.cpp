@@ -2,7 +2,7 @@
 #include <random>
 
 BackgroundElementManager::BackgroundElementManager() {
-    debugFont.loadFromFile("../assets/arial.ttf");
+    debugFont.loadFromFile("assets/arial.ttf");
 }
 
 void BackgroundElementManager::generateBackgroundForChunk(const ChunkCoord& coord, std::vector<BackgroundElement>& outElements) {

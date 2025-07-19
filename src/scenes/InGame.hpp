@@ -9,6 +9,7 @@
 #include "../Asteroid.hpp"
 #include "../DataManager.hpp"
 #include "../BackgroundElementManager.hpp"
+#include "../Projectile.hpp"
 
 #include "../FastNoiseLite.h"
 
@@ -20,7 +21,12 @@ public:
     void update(float dt) override;
     void render(sf::RenderWindow& window) override;
     std::string nextScene() const override;
-    
+
+    std::vector<Projectile> projectiles;
+    void spawnProjectile(const sf::Vector2f& pos, const sf::Vector2f& velocity);
+    void updateProjectiles(float dt);
+    void drawProjectiles(sf::RenderWindow& window) const;
+
     static sf::RenderWindow* window;
     static sf::View* view;
 

@@ -23,6 +23,7 @@ public:
     void Move(float dt);
 
     sf::Vector2f getPosition() const;
+    float getRotation() const;
     sf::FloatRect getBounds() const;
 
     void rotateLeft(float dt);

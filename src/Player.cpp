@@ -74,6 +74,10 @@ sf::Vector2f Player::getPosition() const {
     return sprite.getPosition();
 }
 
+float Player::getRotation() const {
+    return sprite.getRotation();
+}
+
 sf::FloatRect Player::getBounds() const {
     return sprite.getGlobalBounds();
 }
