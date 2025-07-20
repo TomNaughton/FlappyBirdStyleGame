@@ -1,33 +1,32 @@
-#ifndef SPACE_OBJECT_MANAGER_HPP
-#define SPACE_OBJECT_MANAGER_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include "Asteroid.hpp"
+#include "WorldItemManager.hpp"
 #include "Projectile.hpp"
-#include <cmath>
-#include <iostream>
 
 class SpaceObjectManager {
 public:
-    void update(float dt, const sf::Vector2f& playerPos, float maxDistance);
+    SpaceObjectManager(WorldItemManager& worldItemManager);
+
+    void update(float dt);
     void draw(sf::RenderWindow& window);
 
-    // Spawning methods
-    void spawnAsteroid(const std::vector<sf::Vector2f>& polygon,
-                       sf::Vector2f position,
-                       sf::Vector2f velocity,
-                       float rotationSpeed);
+    void addAsteroid(const Asteroid& asteroid);
 
-    void spawnProjectile(const sf::Vector2f& position,
-                         float rotationDegrees,
-                         float speed);
+    std::vector<std::shared_ptr<Item>> getItemsNearPosition(const sf::Vector2f& pos, float radius) const;
+    void removeItem(std::shared_ptr<Item> item);
+    void removeDestroyedAsteroids();
+    std::vector<Asteroid> getAsteroids() const;
+    std::vector<Projectile>& getProjectiles();
 
 private:
-    void handleCollisions();
-
     std::vector<Asteroid> asteroids;
-    std::vector<Projectile> projectiles;
-};
 
-#endif // SPACE_OBJECT_MANAGER_HPP
+    std::vector<Projectile> projectiles;
+
+    WorldItemManager& worldItems;
+
+    sf::Texture asteroidDebrisTexture;
+};

@@ -1,31 +1,28 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
-#include <vector>
 
 class Asteroid {
 public:
-    Asteroid(const std::vector<sf::Vector2f>& polygon,
-             sf::Vector2f position,
-             sf::Vector2f velocity,
-             float rotationSpeed);
+    Asteroid(const sf::Vector2f& position, float radius);
 
     void update(float dt);
-    void draw(sf::RenderWindow& window) const;
-
-    std::vector<Asteroid> splitAt(const sf::Vector2f& impactPoint, const sf::Vector2f& projectileVelocity);
+    void draw(sf::RenderWindow& window);
 
     sf::Vector2f getPosition() const;
-    sf::Vector2f getVelocity() const;
+    void setVelocity(const sf::Vector2f& vel);
 
-    bool containsPoint(const sf::Vector2f& point) const;
+    bool isDestroyed() const;
 
-    bool collidable = true;
+    void markForRemoval();
+    bool isMarkedForRemoval() const;
+
+    sf::FloatRect getBounds() const;
+
+    bool canBeHit = true;
 
 private:
-    std::vector<sf::Vector2f> polygon; // Local points relative to center
-    sf::Vector2f position;
+    sf::CircleShape shape;
     sf::Vector2f velocity;
-    float rotationSpeed;
-    float rotation;
+    bool destroyed = false;
+    bool toRemove = false;
 };
