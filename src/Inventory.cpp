@@ -12,15 +12,19 @@ Inventory::Inventory(int width, int height, int slotSize) {
 }
 
 void Inventory::draw(sf::RenderWindow& window) {
+    if(!visible) return;
+
     // Draw slots
     for (const auto& slot : slots) {
         slot.draw(window);
     }
 
+    if (isDragging && draggedItem) {
+        draggedItem->draw(window);
+    }
+
     // Draw items inside slots
     drawItems(window);
-
-    // Optional: Draw nearby items panel (not implemented here)
 }
 
 void Inventory::drawItems(sf::RenderWindow& window) {
@@ -50,6 +54,50 @@ void Inventory::setNearbyItems(const std::vector<std::shared_ptr<Item>>& nearby)
 }
 
 void Inventory::update(float dt, const sf::Vector2f& mousePos, bool mouseDown, bool mouseReleased) {
-    // Handle input, drag-drop, slot selection, stacking, etc.
-    // This example leaves it empty for you to implement interaction logic
+    if (!visible) return;
+
+    if (!isDragging) {
+        // Not dragging anything, check if user clicked on a slot with an item
+        for (auto& slot : slots) {
+            if (slot.getBounds().contains(mousePos)) {
+                if (mouseDown && slot.isOccupied()) {
+                    draggedItem = slot.getItem();
+                    draggedOffset = mousePos - slot.getPosition();
+                    slot.clearItem();
+                    isDragging = true;
+                    break;
+                }
+            }
+        }
+    } else {
+        // We're dragging an item
+        if (mouseReleased) {
+            // Try to drop into a slot
+            for (auto& slot : slots) {
+                if (slot.getBounds().contains(mousePos) && !slot.isOccupied()) {
+                    slot.setItem(draggedItem);
+                    draggedItem = nullptr;
+                    isDragging = false;
+                    return;
+                }
+            }
+
+            // If no valid drop, cancel drag and drop back into first free slot
+            for (auto& slot : slots) {
+                if (!slot.isOccupied()) {
+                    slot.setItem(draggedItem);
+                    draggedItem = nullptr;
+                    isDragging = false;
+                    return;
+                }
+            }
+
+            // Or optionally drop it on the floor
+        }
+    }
+
+    // Optionally update dragged item position if it supports visual movement
+    if (isDragging && draggedItem) {
+        draggedItem->setDrawPosition(mousePos - draggedOffset);
+    }
 }

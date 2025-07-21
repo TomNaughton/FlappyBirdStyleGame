@@ -3,7 +3,7 @@
 
 class Asteroid {
 public:
-    Asteroid(const sf::Vector2f& position, float radius);
+    Asteroid(const sf::Vector2f& position, float radius, const sf::Texture& texture);
 
     void update(float dt);
     void draw(sf::RenderWindow& window);
@@ -21,8 +21,9 @@ public:
     bool canBeHit = true;
 
 private:
-    sf::CircleShape shape;
     sf::Vector2f velocity;
     bool destroyed = false;
     bool toRemove = false;
+    sf::Sprite sprite;
+    const sf::Texture* texture = nullptr;
 };

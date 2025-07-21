@@ -6,13 +6,18 @@
 sf::RenderWindow* InGame::window = nullptr;
 sf::View* InGame::view = nullptr;
 
-InGame::InGame() : spaceObjects(worldItems) {
-    if (!spriteSheet.loadFromFile("assets/spritesheet.png")) {
+InGame::InGame() : spaceObjects(worldItems), uiManager(*window) {
+    uiManager.setInventory(&player.getInventory());
+
+    if (!spaceshipTexture.loadFromFile("assets/spaceship.png")) {
         // Handle error
     }
 
-    spaceshipSprite.setTexture(spriteSheet);
-    spaceshipSprite.setTextureRect(sf::IntRect(0, 0, 512, 270));
+    if (!asteroidTexture.loadFromFile("assets/asteroid.png")) {
+        // Handle error
+    }
+
+    spaceshipSprite.setTexture(spaceshipTexture);
     spaceshipSprite.setPosition(50, window->getSize().y / 2);
     sf::FloatRect bounds = spaceshipSprite.getLocalBounds();
     spaceshipSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
@@ -28,9 +33,6 @@ InGame::InGame() : spaceObjects(worldItems) {
     noise.SetFractalOctaves(3);
     noise.SetFractalGain(0.5f);
     noise.SetFractalLacunarity(2.0f);
-
-    // Spawn initial asteroids around the player...
-    // ... (code as before)
 }
 
 void InGame::handleEvent(const sf::Event& event) {
@@ -48,6 +50,20 @@ void InGame::handleEvent(const sf::Event& event) {
 
     zoomOut = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
     zoomIn = sf::Keyboard::isKeyPressed(sf::Keyboard::X);
+
+    if(event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::I) {
+            player.getInventory().toggleVisibility();
+        }
+    }
+
+    if (event.type == sf::Event::Resized) {
+        sf::Vector2u newSize(event.size.width, event.size.height);
+        view->setSize(newSize.x, newSize.y);
+        view->setCenter(newSize.x / 2.f, newSize.y / 2.f);
+
+        uiManager.onWindowResized(newSize);
+    }
 }
 
 void InGame::update(float dt) {
@@ -63,7 +79,7 @@ void InGame::update(float dt) {
 
     player.update(dt, spaceObjects);
 
-    if (player.getInventory().isVisible()) {
+    if (!player.getInventory().isVisible()) {
         float pickupRadius = 150.f;
         auto nearby = worldItems.getItemsNearPosition(player.getPosition(), pickupRadius);
         player.getInventory().setNearbyItems(nearby);
@@ -97,7 +113,7 @@ void InGame::update(float dt) {
 
 
     static float spawnTimer = 0.f;
-    static constexpr float spawnInterval = 10.f;
+    static constexpr float spawnInterval = 3.f;
     spawnTimer -= dt;
     if (spawnTimer <= 0.f) {
         spawnTimer = spawnInterval;
@@ -121,9 +137,9 @@ void InGame::update(float dt) {
 
         sf::Vector2f spawnPos = playerPos + sf::Vector2f(std::cos(angle), std::sin(angle)) * dist;
 
-        float radius = 30.f + static_cast<float>(std::rand() % 20);
+        float radius = 100.f + static_cast<float>(std::rand() % 20);
 
-        Asteroid asteroid(spawnPos, radius);
+        Asteroid asteroid(spawnPos, radius, asteroidTexture);
 
         sf::Vector2f dir = playerPos - spawnPos;
         float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
@@ -165,6 +181,7 @@ void InGame::render(sf::RenderWindow& window) {
     window.setView(cameraShake.applyTo(*view));
 
     visualEffects.draw(window);
+    uiManager.draw(window);
 }
 
 std::string InGame::nextScene() const {

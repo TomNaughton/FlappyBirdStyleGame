@@ -43,3 +43,8 @@ void Item::setTexture(const sf::Texture* tex) {
     texture = tex;
     sprite.setTexture(*texture);
 }
+
+void Item::setDrawPosition(const sf::Vector2f& pos) {
+    position = pos;
+    sprite.setPosition(pos);
+}

@@ -11,6 +11,7 @@ public:
     bool isOccupied() const;
     std::shared_ptr<Item> getItem() const;
     sf::FloatRect getBounds() const;
+    sf::Vector2f getPosition() const;
 
     void setItem(std::shared_ptr<Item> item);
     void clearItem();

@@ -8,6 +8,7 @@
 #include "../BackgroundElementManager.hpp"
 #include "../FastNoiseLite.h"
 #include "../WorldItemManager.hpp"
+#include "../UIManager.hpp"
 
 class InGame : public Scene {
 public:
@@ -26,8 +27,10 @@ public:
 private:
     BackgroundElementManager backgroundElementManager;
     Player player;
+
+    sf::Texture spaceshipTexture;
+    sf::Texture asteroidTexture;
     sf::Sprite spaceshipSprite;
-    sf::Texture spriteSheet;
     sf::Font font;
     FastNoiseLite noise;
 
@@ -43,6 +46,7 @@ private:
 
     SpaceObjectManager spaceObjects;
     WorldItemManager worldItems;
+    UIManager uiManager;
 
     bool mouseReleased = false;
 

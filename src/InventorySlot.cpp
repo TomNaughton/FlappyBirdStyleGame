@@ -40,3 +40,7 @@ void InventorySlot::setItem(std::shared_ptr<Item> newItem) {
 void InventorySlot::clearItem() {
     item = nullptr;
 }
+
+sf::Vector2f InventorySlot::getPosition() const {
+    return slotRect.getPosition();
+}

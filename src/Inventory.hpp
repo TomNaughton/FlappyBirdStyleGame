@@ -13,6 +13,7 @@ public:
 
     void addItem(std::shared_ptr<Item> item);
     bool isVisible() const;
+    void toggleVisibility() { visible = !visible; }
 
     void update(float dt, const sf::Vector2f& mousePos, bool mouseDown, bool mouseReleased);
 
@@ -22,7 +23,11 @@ private:
     void drawItems(sf::RenderWindow& window);
 
     std::vector<InventorySlot> slots;
-    bool visible = true;
+    bool visible = false;
 
     std::vector<std::shared_ptr<Item>> nearbyItems;
+
+    std::shared_ptr<Item> draggedItem = nullptr;
+    sf::Vector2f draggedOffset;
+    bool isDragging = false;
 };

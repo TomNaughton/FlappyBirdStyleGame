@@ -1,24 +1,28 @@
 #include "Asteroid.hpp"
+#include <iostream>
 
-Asteroid::Asteroid(const sf::Vector2f& position, float radius) {
-    shape.setRadius(radius);
-    shape.setOrigin(radius, radius);
-    shape.setPosition(position);
-    shape.setFillColor(sf::Color::Green);
+Asteroid::Asteroid(const sf::Vector2f& position, float radius, const sf::Texture& texture) : texture(&texture) {
+    sprite.setOrigin(radius, radius);
+    sprite.setPosition(position);
+    sprite.setTexture(texture);
+    sprite.setScale(radius / texture.getSize().x, radius / texture.getSize().y);
 }
 
 void Asteroid::update(float dt) {
-    shape.move(velocity * dt);
-
-    // Implement destruction logic as needed
+    sprite.move(velocity * dt);
 }
 
 void Asteroid::draw(sf::RenderWindow& window) {
-    window.draw(shape);
+    if (texture) {
+        window.draw(sprite);
+    }
+    else {
+        std::cout << "Asteroid has no texture!" << std::endl;
+    }
 }
 
 sf::Vector2f Asteroid::getPosition() const {
-    return shape.getPosition();
+    return sprite.getPosition();
 }
 
 void Asteroid::setVelocity(const sf::Vector2f& vel) {
@@ -38,5 +42,5 @@ bool Asteroid::isMarkedForRemoval() const {
 }
 
 sf::FloatRect Asteroid::getBounds() const {
-    return shape.getGlobalBounds();
+    return sprite.getGlobalBounds();
 }

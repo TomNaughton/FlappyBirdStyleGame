@@ -15,6 +15,7 @@ public:
     std::string getName() const;
 
     void setPosition(const sf::Vector2f& pos);
+    void setDrawPosition(const sf::Vector2f& pos);
     void setTexture(const sf::Texture* tex);
     void draw(sf::RenderWindow& window);
 

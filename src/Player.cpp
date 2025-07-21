@@ -61,7 +61,6 @@ void Player::thrustBackward(float dt) {
 
 void Player::draw(sf::RenderWindow& window) {
     window.draw(sprite);
-    inventory.draw(window);
 }
 
 void Player::setSprite(sf::Sprite s) {
