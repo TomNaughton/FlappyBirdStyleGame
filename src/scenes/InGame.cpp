@@ -6,8 +6,8 @@
 sf::RenderWindow* InGame::window = nullptr;
 sf::View* InGame::view = nullptr;
 
-InGame::InGame() : spaceObjects(worldItems), uiManager(*window) {
-    uiManager.setInventory(&player.getInventory());
+InGame::InGame() : spaceObjects(worldItems), uiManager(*window), player(*window) {
+    uiManager.setInventory(player.getInventory());
 
     if (!spaceshipTexture.loadFromFile("assets/spaceship.png")) {
         // Handle error
@@ -53,7 +53,7 @@ void InGame::handleEvent(const sf::Event& event) {
 
     if(event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::I) {
-            player.getInventory().toggleVisibility();
+            player.getInventory()->toggleVisibility();
         }
     }
 
@@ -79,10 +79,10 @@ void InGame::update(float dt) {
 
     player.update(dt, spaceObjects);
 
-    if (!player.getInventory().isVisible()) {
+    if (!player.getInventory()->isVisible()) {
         float pickupRadius = 150.f;
         auto nearby = worldItems.getItemsNearPosition(player.getPosition(), pickupRadius);
-        player.getInventory().setNearbyItems(nearby);
+        player.getInventory()->setNearbyItems(nearby);
     }
 
     sf::Vector2f target = player.getPosition();
@@ -153,14 +153,14 @@ void InGame::update(float dt) {
     }
 
     if (mouseReleased) {
-        player.getInventory().update(dt, static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)),
+        player.getInventory()->update(dt, static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)),
                                     sf::Mouse::isButtonPressed(sf::Mouse::Left),
                                     true);
 
         mouseReleased = false;
     }
     else {
-        player.getInventory().update(dt, static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)),
+        player.getInventory()->update(dt, static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)),
                                     sf::Mouse::isButtonPressed(sf::Mouse::Left),
                                     false);
     }

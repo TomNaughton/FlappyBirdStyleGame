@@ -1,7 +1,9 @@
 #include "Inventory.hpp"
+#include <iostream>
 
-Inventory::Inventory(int width, int height, int slotSize) {
+Inventory::Inventory(int width, int height, int slotSize): width(width), height(height), slotSize(slotSize) {
     // Create grid of slots
+    std::cout << "Creating inventory grid with size: width:" << width << ", height:" << height << "\n";
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             int px = x * slotSize;
@@ -11,21 +13,38 @@ Inventory::Inventory(int width, int height, int slotSize) {
     }
 }
 
-void Inventory::draw(sf::RenderWindow& window) {
-    if(!visible) return;
+void Inventory::draw(sf::RenderWindow& window) const {
+    if (!visible) return;
+    std::cout << "Drawing inventory...\n" << std::endl;
+
+    // Get view center and size
+    sf::Vector2f viewCenter = window.getView().getCenter();
+    sf::Vector2f viewSize = window.getView().getSize();
+
+    // Inventory dimensions
+    int totalWidth = width * slotSize;
+    int totalHeight = height * slotSize;
+
+    // Top-left of the centered inventory panel
+    sf::Vector2f offset(
+        viewCenter.x - totalWidth / 2.f,
+        viewCenter.y - totalHeight / 2.f
+    );
 
     // Draw slots
     for (const auto& slot : slots) {
-        slot.draw(window);
+        slot.draw(window, offset);  // << pass offset
     }
 
+    // Draw dragged item
     if (isDragging && draggedItem) {
         draggedItem->draw(window);
     }
+    std::cout << "Slots: " << slots.size() << "\n";
 
-    // Draw items inside slots
-    drawItems(window);
+    std::cout << "Slot position: " << slots[0].getPosition().x << ", " << slots[0].getPosition().y << "\n";
 }
+
 
 void Inventory::drawItems(sf::RenderWindow& window) {
     for (const auto& slot : slots) {
@@ -38,7 +57,7 @@ void Inventory::drawItems(sf::RenderWindow& window) {
 void Inventory::addItem(std::shared_ptr<Item> item) {
     for (auto& slot : slots) {
         if (!slot.isOccupied()) {
-            slot.setItem(item);
+            slot.setItem(item, position);
             return;
         }
     }
@@ -56,13 +75,21 @@ void Inventory::setNearbyItems(const std::vector<std::shared_ptr<Item>>& nearby)
 void Inventory::update(float dt, const sf::Vector2f& mousePos, bool mouseDown, bool mouseReleased) {
     if (!visible) return;
 
+    // Calculate the same offset as in draw()
+    sf::Vector2f offset(
+        position.x,
+        position.y
+    );
+
     if (!isDragging) {
-        // Not dragging anything, check if user clicked on a slot with an item
         for (auto& slot : slots) {
-            if (slot.getBounds().contains(mousePos)) {
+            sf::FloatRect globalBounds = slot.getBounds();
+            globalBounds.left += offset.x;
+            globalBounds.top += offset.y;
+
+            if (globalBounds.contains(mousePos)) {
                 if (mouseDown && slot.isOccupied()) {
                     draggedItem = slot.getItem();
-                    draggedOffset = mousePos - slot.getPosition();
                     slot.clearItem();
                     isDragging = true;
                     break;
@@ -70,34 +97,33 @@ void Inventory::update(float dt, const sf::Vector2f& mousePos, bool mouseDown, b
             }
         }
     } else {
-        // We're dragging an item
         if (mouseReleased) {
-            // Try to drop into a slot
             for (auto& slot : slots) {
-                if (slot.getBounds().contains(mousePos) && !slot.isOccupied()) {
-                    slot.setItem(draggedItem);
+                sf::FloatRect globalBounds = slot.getBounds();
+                globalBounds.left += offset.x;
+                globalBounds.top += offset.y;
+
+                if (globalBounds.contains(mousePos) && !slot.isOccupied()) {
+                    slot.setItem(draggedItem, position);
                     draggedItem = nullptr;
                     isDragging = false;
                     return;
                 }
             }
 
-            // If no valid drop, cancel drag and drop back into first free slot
             for (auto& slot : slots) {
                 if (!slot.isOccupied()) {
-                    slot.setItem(draggedItem);
+                    slot.setItem(draggedItem, position);
                     draggedItem = nullptr;
                     isDragging = false;
                     return;
                 }
             }
-
-            // Or optionally drop it on the floor
         }
     }
 
-    // Optionally update dragged item position if it supports visual movement
     if (isDragging && draggedItem) {
-        draggedItem->setDrawPosition(mousePos - draggedOffset);
+        draggedItem->setDrawPosition(mousePos);
     }
 }
+

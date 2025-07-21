@@ -1,13 +1,27 @@
 #include "Player.hpp"
 #include <cmath>
 
-Player::Player() : inventory(5, 4, 64) {
-
+Player::Player(sf::RenderWindow& window) : inventory(inventoryWidth, inventoryHeight, slotSize) {
+    sf::Vector2u windowSize = window.getSize();
+    inventory.position = sf::Vector2f(
+        (windowSize.x - inventoryWidth * slotSize) / 2.f,
+        (windowSize.y - inventoryHeight * slotSize) / 2.f
+    );
 }
 
 void Player::update(float dt, SpaceObjectManager& spaceObjects) {
     Move(dt);
     attemptPickupNearbyItems(spaceObjects);
+
+    // Animate sprite frames
+    elapsedTime += sf::seconds(dt);
+    if (elapsedTime >= frameTime) {
+        elapsedTime -= frameTime;
+        currentFrame = (currentFrame + 1) % frameCount;
+
+        int top = currentFrame * frameSize.y;
+        sprite.setTextureRect(sf::IntRect(0, top, frameSize.x, frameSize.y));
+    }
 }
 
 void Player::Move(float dt) {
@@ -65,7 +79,10 @@ void Player::draw(sf::RenderWindow& window) {
 
 void Player::setSprite(sf::Sprite s) {
     sprite = s;
-    sprite.setScale(0.1f, 0.1f);
+    texture = sprite.getTexture(); // store pointer to texture (spritesheet)
+    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y)); // initial frame rect
+    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f); // set origin to center of sprite
+    sprite.setScale(2.f, 2.f); // scale sprite to desired size
 }
 
 sf::Vector2f Player::getPosition() const {
@@ -80,8 +97,8 @@ sf::FloatRect Player::getBounds() const {
     return sprite.getGlobalBounds();
 }
 
-Inventory& Player::getInventory() {
-    return inventory;
+Inventory* Player::getInventory() {
+    return &inventory;
 }
 
 void Player::attemptPickupNearbyItems(SpaceObjectManager& spaceObjects) {

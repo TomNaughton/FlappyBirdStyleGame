@@ -21,6 +21,8 @@ public:
 
     sf::FloatRect getBounds() const;
 
+    sf::Sprite* getSprite();
+
     // Inventory size and shape
     sf::Vector2i getSize() const;
 

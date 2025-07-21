@@ -50,5 +50,10 @@ private:
 
     bool mouseReleased = false;
 
+    sf::Vector2i spaceshipFrameSize;
+    int spaceshipCurrentFrame;
+    sf::Time spaceshipFrameTime;
+    sf::Time spaceshipElapsedTime;
+
     float dt;
 };

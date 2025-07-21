@@ -8,12 +8,17 @@ InventorySlot::InventorySlot(int x, int y, int width, int height) {
     slotRect.setOutlineThickness(1.f);
 }
 
-void InventorySlot::draw(sf::RenderWindow& window) const {
-    window.draw(slotRect);
+void InventorySlot::draw(sf::RenderWindow& window, const sf::Vector2f& offset) const {
+    sf::RectangleShape tempRect = slotRect;
+    tempRect.setPosition(tempRect.getPosition() + offset);
+    window.draw(tempRect);
+
     if (item) {
-        item->draw(window);  // Assumes Item::draw positions the sprite correctly
+        item->setPosition(tempRect.getPosition());
+        item->draw(window);
     }
 }
+
 
 bool InventorySlot::isOccupied() const {
     return item != nullptr;
@@ -27,13 +32,23 @@ sf::FloatRect InventorySlot::getBounds() const {
     return slotRect.getGlobalBounds();
 }
 
-void InventorySlot::setItem(std::shared_ptr<Item> newItem) {
+void InventorySlot::setItem(std::shared_ptr<Item> newItem, const sf::Vector2f& offset) {
     item = newItem;
     if (item) {
-        // Position item sprite to slot center or top-left as needed
-        // For example:
-        sf::FloatRect bounds = slotRect.getGlobalBounds();
-        item->setPosition(sf::Vector2f(bounds.left + 5.f, bounds.top + 5.f));
+        // Local position of the slot in inventory grid
+        sf::Vector2f localPos = slotRect.getPosition();  // e.g., (0,0), (64,0), etc.
+
+        // Apply inventory offset to get screen/world position
+        sf::Vector2f visualTopLeft = localPos + offset;
+
+        // Get size of the slot
+        sf::Vector2f size = slotRect.getSize();
+
+        // Center of the slot (in screen/world space)
+        sf::Vector2f center = visualTopLeft + (size / 2.f);
+
+        // Place item at center
+        item->setPosition(center);
     }
 }
 

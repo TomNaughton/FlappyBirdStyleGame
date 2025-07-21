@@ -6,7 +6,12 @@
 
 class Player {
 public:
-    Player();
+    int inventoryWidth = 5;
+    int inventoryHeight = 4;
+    int slotSize = 64;
+    Inventory inventory;
+
+    Player(sf::RenderWindow& window);
 
     void update(float dt, SpaceObjectManager& spaceObjects);
     void draw(sf::RenderWindow& window);
@@ -19,7 +24,7 @@ public:
 
     void shoot(std::vector<Projectile>* projectiles);
 
-    Inventory& getInventory();
+    Inventory* getInventory();
 
 private:
     void Move(float dt);
@@ -30,12 +35,17 @@ private:
     void attemptPickupNearbyItems(SpaceObjectManager& spaceObjects);
 
     sf::Sprite sprite;
+    const sf::Texture* texture = nullptr; // pointer to your spritesheet texture
+    sf::Vector2i frameSize = {32, 32}; // frame size in pixels (adjust to your frames)
+    int frameCount = 3; // total frames in spritesheet
+    int currentFrame = 0;
+    sf::Time frameTime = sf::seconds(0.2f); // 200 ms per frame
+    sf::Time elapsedTime = sf::Time::Zero;
+
     float rotation = 0.f;
     float speed = 0.f;
     float maxSpeed = 300.f;
     float acceleration = 200.f;
     float deceleration = 150.f;
     sf::Vector2f velocity;
-
-    Inventory inventory;
 };

@@ -9,7 +9,7 @@ class Inventory {
 public:
     Inventory(int width, int height, int slotSize);
 
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) const;
 
     void addItem(std::shared_ptr<Item> item);
     bool isVisible() const;
@@ -18,6 +18,8 @@ public:
     void update(float dt, const sf::Vector2f& mousePos, bool mouseDown, bool mouseReleased);
 
     void setNearbyItems(const std::vector<std::shared_ptr<Item>>& nearby);
+
+    sf::Vector2f position;
 
 private:
     void drawItems(sf::RenderWindow& window);
@@ -30,4 +32,6 @@ private:
     std::shared_ptr<Item> draggedItem = nullptr;
     sf::Vector2f draggedOffset;
     bool isDragging = false;
+
+    int width, height, slotSize;
 };
