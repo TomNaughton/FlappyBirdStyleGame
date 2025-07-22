@@ -32,6 +32,7 @@ void SpaceObjectManager::update(float dt) {
                 std::cout << "Asteroid position: " << asteroid.getPosition().x << ", " << asteroid.getPosition().y << std::endl;
                 debris->setPosition(asteroid.getPosition());
                 worldItems.spawnItem(debris);
+                std::cout << "Debris spawned at: " << debris->getBounds().left << ", " << debris->getBounds().top << std::endl;
                 std::cout << "Asteroid debris created" << std::endl;
             }
         }

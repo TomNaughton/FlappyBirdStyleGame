@@ -2,10 +2,10 @@
 #include <iostream>
 
 Asteroid::Asteroid(const sf::Vector2f& position, float radius, const sf::Texture& texture) : texture(&texture) {
-    sprite.setOrigin(radius, radius);
     sprite.setPosition(position);
     sprite.setTexture(texture);
     sprite.setScale(radius / texture.getSize().x, radius / texture.getSize().y);
+    sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 }
 
 void Asteroid::update(float dt) {

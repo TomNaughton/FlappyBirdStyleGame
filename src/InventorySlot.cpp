@@ -1,4 +1,5 @@
 #include "InventorySlot.hpp"
+#include <iostream>
 
 InventorySlot::InventorySlot(int x, int y, int width, int height) {
     slotRect.setPosition(static_cast<float>(x), static_cast<float>(y));
@@ -14,7 +15,6 @@ void InventorySlot::draw(sf::RenderWindow& window, const sf::Vector2f& offset) c
     window.draw(tempRect);
 
     if (item) {
-        item->setPosition(tempRect.getPosition());
         item->draw(window);
     }
 }
@@ -46,6 +46,10 @@ void InventorySlot::setItem(std::shared_ptr<Item> newItem, const sf::Vector2f& o
 
         // Center of the slot (in screen/world space)
         sf::Vector2f center = visualTopLeft + (size / 2.f);
+
+        std::cout << "Setting item position to: " << center.x << ", " << center.y << std::endl;
+        std::cout << "Visual Top Left: " << visualTopLeft.x << ", " << visualTopLeft.y << std::endl;
+        std::cout << "Slot Size: " << size.x << ", " << size.y << std::endl;
 
         // Place item at center
         item->setPosition(center);

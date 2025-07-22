@@ -5,6 +5,7 @@ Item::Item(ItemType type, const std::string& name, const sf::Texture& texture)
     : type(type), name(name), texture(&texture)
 {
     sprite.setTexture(texture);
+    size = sf::Vector2i(static_cast<int>(texture.getSize().x), static_cast<int>(texture.getSize().y));
     sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 }
 
@@ -19,6 +20,7 @@ std::string Item::getName() const {
 void Item::setPosition(const sf::Vector2f& pos) {
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     position = pos;
+    sprite.setPosition(position);
     std::cout << "New item position: " << position.x << ", " << position.y << std::endl;
 }
 
