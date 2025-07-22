@@ -1,7 +1,8 @@
 #include "Player.hpp"
 #include <cmath>
 
-Player::Player(sf::RenderWindow& window) : inventory(inventoryWidth, inventoryHeight, slotSize) {
+Player::Player(sf::RenderWindow& window) : inventory(inventoryWidth, inventoryHeight, slotSize), 
+                                             hud(window) {
     sf::Vector2u windowSize = window.getSize();
     inventory.position = sf::Vector2f(
         (windowSize.x - inventoryWidth * slotSize) / 2.f,
@@ -99,6 +100,10 @@ sf::FloatRect Player::getBounds() const {
 
 Inventory* Player::getInventory() {
     return &inventory;
+}
+
+UI::HUD* Player::getHUD() {
+    return &hud;
 }
 
 void Player::attemptPickupNearbyItems(SpaceObjectManager& spaceObjects) {

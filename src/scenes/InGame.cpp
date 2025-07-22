@@ -8,6 +8,7 @@ sf::View* InGame::view = nullptr;
 
 InGame::InGame() : spaceObjects(worldItems), uiManager(*window), player(*window) {
     uiManager.setInventory(player.getInventory());
+    uiManager.setHUD(player.getHUD());
 
     if (!spaceshipTexture.loadFromFile("assets/spaceship.png")) {
         // Handle error
@@ -96,6 +97,8 @@ void InGame::update(float dt) {
     backgroundElementManager.EraseOldShootingStars(dt);
     backgroundElementManager.cullDistantChunks(view->getCenter());
     backgroundElementManager.updateVisibleChunks(view->getCenter(), view->getSize().x, view->getSize().y);
+
+    uiManager.update(dt);
 
     visualEffects.update(dt);
     cameraShake.update(dt);

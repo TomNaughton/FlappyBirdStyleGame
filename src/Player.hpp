@@ -3,6 +3,7 @@
 #include "Inventory.hpp"
 #include "SpaceObjectManager.hpp"
 #include "Projectile.hpp"
+#include "UI/HUD.hpp"
 
 class Player {
 public:
@@ -10,6 +11,7 @@ public:
     int inventoryHeight = 4;
     int slotSize = 64;
     Inventory inventory;
+    UI::HUD hud;
 
     Player(sf::RenderWindow& window);
 
@@ -25,6 +27,7 @@ public:
     void shoot(std::vector<Projectile>* projectiles);
 
     Inventory* getInventory();
+    UI::HUD* getHUD();
 
 private:
     void Move(float dt);

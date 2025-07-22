@@ -8,7 +8,7 @@
 #include "../BackgroundElementManager.hpp"
 #include "../FastNoiseLite.h"
 #include "../WorldItemManager.hpp"
-#include "../UIManager.hpp"
+#include "../UI/UIManager.hpp"
 
 class InGame : public Scene {
 public:
@@ -46,7 +46,7 @@ private:
 
     SpaceObjectManager spaceObjects;
     WorldItemManager worldItems;
-    UIManager uiManager;
+    UI::UIManager uiManager;
 
     bool mouseReleased = false;
 
